@@ -1,0 +1,83 @@
+struct node
+{
+    int l;
+    int r;
+    ll x;
+    int pr;
+    ll sz;
+    ll sum;
+    node(ll val)
+    {
+        l = -1;
+        r = -1;
+        x = val;
+        sum = val;
+        pr = gen();
+        sz = 1;
+    }
+};
+
+vector <node> T;
+int root = -1;
+
+void update(int t)
+{
+    if (t == -1) return;
+    T[t].sum = T[t].x;
+    T[t].sz = 1;
+    if (T[t].l > -1)
+    {
+        T[t].sum += T[T[t].l].sum;
+        T[t].sz += T[T[t].l].sz;
+    }
+    if (T[t].r > -1)
+    {
+        T[t].sum += T[T[t].r].sum;
+        T[t].sz += T[T[t].r].sz;
+    }
+    return;
+}
+
+pair <int, int> split(int t, ll x)
+{
+    if (t == -1)
+    {
+        return {-1, -1};
+    }
+    if (T[t].x > x)
+    {
+        pair <int, int> pp = split(T[t].l, x);
+        T[t].l = pp.S;
+        update(t);
+        update(pp.F);
+        return {pp.F, t};
+    }
+    else
+    {
+        pair <int, int> pp = split(T[t].r, x);
+        T[t].r = pp.F;
+        update(t);
+        update(pp.S);
+        return {t, pp.S};
+    }
+}
+
+int merg(int t1, int t2)
+{
+    if (t1 == -1)
+        return t2;
+    if (t2 == -1)
+        return t1;
+    if (T[t1].pr > T[t2].pr)
+    {
+        T[t1].r = merg(T[t1].r, t2);
+        update(t1);
+        return t1;
+    }
+    else
+    {
+        T[t2].l = merg(t1, T[t2].l);
+        update(t2);
+        return t2;
+    }
+}
