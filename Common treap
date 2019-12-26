@@ -49,7 +49,6 @@ pair <int, int> split(int t, ll x)
         pair <int, int> pp = split(T[t].l, x);
         T[t].l = pp.S;
         update(t);
-        update(pp.F);
         return {pp.F, t};
     }
     else
@@ -57,7 +56,6 @@ pair <int, int> split(int t, ll x)
         pair <int, int> pp = split(T[t].r, x);
         T[t].r = pp.F;
         update(t);
-        update(pp.S);
         return {t, pp.S};
     }
 }
